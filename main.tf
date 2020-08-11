@@ -7,7 +7,7 @@ provider "google" {
 
 resource "google_compute_address" "static" {
   name = "ipv4-address"
-  region = "europe-west3-a"
+  region = "europe-west3"
 }
 
 resource "google_compute_instance" "terraform-task-instance" {
@@ -22,12 +22,18 @@ resource "google_compute_instance" "terraform-task-instance" {
     }
   }
   network_interface {
-    network = "default"
+  network = "default"
 
-    access_config {
-      nat_ip = google_compute_address.static.address
-    }
-  }
+        access_config {
+        nat_ip = google_compute_address.static.address
+                      }
+                    }
+
+metadata  {
+       ssh-keys = "ubuntu:${file("c:/User/Dima/.ssh/id_rsa.pub")}"
+          }
+
+
 }
 
 resource "google_compute_firewall" "terraform-task-firewall" {
