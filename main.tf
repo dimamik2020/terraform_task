@@ -5,8 +5,13 @@ provider "google" {
   zone        = "us-central1-c"
 }
 
+resource "google_compute_address" "static" {
+  name = "ipv4-address"
+  region = "europe-west3-a"
+}
+
 resource "google_compute_instance" "terraform-task-instance" {
-  name         = "terraform-task"
+  name         = "terraform-task-instance"
   machine_type = "g1-small"
   zone         = "europe-west3-a"
   tags = ["dimamik", "terraformed"]
@@ -20,7 +25,7 @@ resource "google_compute_instance" "terraform-task-instance" {
     network = "default"
 
     access_config {
-      // Ephemeral IP
+      nat_ip = google_compute_address.static.address
     }
   }
 }
@@ -33,6 +38,12 @@ resource "google_compute_firewall" "terraform-task-firewall" {
   allow {
     protocol = "tcp"
     ports    = ["80","443"]
+        }
+
+  allow {
+    protocol = "tcp"
+    ports    = ["22"]
+
         }
 
   source_tags = ["web"]
