@@ -16,3 +16,4 @@ resource "google_compute_instance" "default" {
       image = "ubuntu-1804-bionic-v20200807"
     }
   }
+}
